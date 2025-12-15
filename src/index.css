@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --terminal-green: #00ff41;
+    --terminal-black: #0a0a0a;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: var(--terminal-black);
+    color: #e0e0e0;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--terminal-black);
+    background-image:
+      linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* CRT scanline effect overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    z-index: 9999;
+  }
+
+  /* Selection styling */
+  ::selection {
+    background: var(--terminal-green);
+    color: var(--terminal-black);
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #111111;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #00ff41;
+    border: 1px solid #0a0a0a;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #33ff66;
+  }
+}
+
+@layer components {
+  /* Neobrutalist button styles */
+  .btn-brutal {
+    @apply px-4 py-2 font-mono font-bold uppercase tracking-wider;
+    @apply bg-terminal-black text-terminal-green;
+    @apply border-3 border-terminal-green;
+    @apply shadow-brutal transition-all duration-100;
+    @apply hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm;
+    @apply active:translate-x-[4px] active:translate-y-[4px] active:shadow-none;
+  }
+
+  .btn-brutal-amber {
+    @apply px-4 py-2 font-mono font-bold uppercase tracking-wider;
+    @apply bg-terminal-black text-terminal-amber;
+    @apply border-3 border-terminal-amber;
+    @apply shadow-brutal-amber transition-all duration-100;
+    @apply hover:translate-x-[2px] hover:translate-y-[2px];
+    @apply active:translate-x-[4px] active:translate-y-[4px] active:shadow-none;
+  }
+
+  /* Card with brutal styling */
+  .card-brutal {
+    @apply bg-terminal-dark border-3 border-terminal-green;
+    @apply shadow-brutal p-4;
+  }
+
+  .card-brutal-amber {
+    @apply bg-terminal-dark border-3 border-terminal-amber;
+    @apply shadow-brutal-amber p-4;
+  }
+
+  /* Terminal-style input */
+  .input-terminal {
+    @apply bg-terminal-black text-terminal-green;
+    @apply border-2 border-terminal-green px-3 py-2;
+    @apply font-mono placeholder:text-terminal-green-dim;
+    @apply focus:outline-none focus:shadow-glow;
+  }
+
+  /* Blinking cursor effect */
+  .cursor-blink::after {
+    content: "_";
+    @apply animate-blink text-terminal-green;
+  }
+
+  /* Glowing text effect */
+  .text-glow {
+    text-shadow: 0 0 10px var(--terminal-green), 0 0 20px var(--terminal-green);
+  }
+
+  /* Data table styling */
+  .table-terminal {
+    @apply w-full font-mono text-sm;
+  }
+
+  .table-terminal th {
+    @apply text-left text-terminal-green uppercase tracking-wider py-2 px-3;
+    @apply border-b-2 border-terminal-green;
+  }
+
+  .table-terminal td {
+    @apply py-2 px-3 border-b border-terminal-green/30;
+  }
+
+  .table-terminal tr:hover td {
+    @apply bg-terminal-green/10;
+  }
+}
+
+@layer utilities {
+  /* Flicker animation for authenticity */
+  .animate-flicker {
+    animation: flicker 0.15s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.98; }
+  }
+
+  /* Typing animation */
+  .typing-effect {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 2s steps(40, end);
+  }
+
+  @keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+}
