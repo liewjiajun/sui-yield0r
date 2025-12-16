@@ -15,6 +15,8 @@ export type Protocol =
   | 'bucket'
   | 'kai'
   | 'deepbook'
+  | 'momentum'
+  | 'fullsail'
   | 'other';
 
 export type AssetType = 'lending' | 'lp' | 'lst' | 'staking' | 'vault' | 'farm';
@@ -211,6 +213,22 @@ export const PROTOCOL_CONFIGS: Record<Protocol, ProtocolConfig> = {
     color: '#8b5cf6',
     website: 'https://deepbook.tech',
   },
+  momentum: {
+    name: 'Momentum',
+    id: 'momentum',
+    logo: '/protocols/momentum.svg',
+    color: '#FF6B35',
+    website: 'https://app.mmt.finance',
+    defillamaSlug: 'momentum',
+  },
+  fullsail: {
+    name: 'Full Sail',
+    id: 'fullsail',
+    logo: '/protocols/fullsail.svg',
+    color: '#00D4AA',
+    website: 'https://fullsail.finance',
+    defillamaSlug: 'full-sail',
+  },
   other: {
     name: 'Other',
     id: 'other',
@@ -222,19 +240,45 @@ export const PROTOCOL_CONFIGS: Record<Protocol, ProtocolConfig> = {
 
 // Map DefiLlama project names to our Protocol type
 export const DEFILLAMA_PROJECT_MAP: Record<string, Protocol> = {
+  // Lending protocols
   'navi-lending': 'navi',
   'scallop-lend': 'scallop',
+  'suilend': 'suilend',
+  // DEXes / CLMMs
   'cetus-clmm': 'cetus',
   'turbos': 'turbos',
   'bluefin-spot': 'bluefin',
   'flowx-v2': 'flowx',
   'flowx-v3': 'flowx',
+  'kriya-dex': 'kriya',
+  'kriya-clmm': 'kriya',
+  'momentum': 'momentum',
+  'full-sail': 'fullsail',
+  // Yield / Farm protocols
   'kai-finance': 'kai',
-  'full-sail': 'other',
   'bucket-farm': 'bucket',
+  // Liquid staking
   'aftermath-finance': 'aftermath',
+  'aftermath-afsui': 'aftermath',
   'haedal-protocol': 'haedal',
   'springsui': 'springsui',
   'volo': 'volo',
-  'suilend': 'suilend',
+  // DeepBook
+  'deepbook': 'deepbook',
 };
+
+// Helper to check if symbol contains a user's asset (for LP matching)
+export function symbolContainsAsset(yieldSymbol: string, userAsset: string): boolean {
+  const normalizedYield = yieldSymbol.toUpperCase();
+  const normalizedAsset = userAsset.toUpperCase();
+
+  // Direct match
+  if (normalizedYield === normalizedAsset) {
+    return true;
+  }
+
+  // Check if LP token contains the asset (e.g., "SUI-USDC" contains "SUI")
+  // Split by common LP separators
+  const parts = normalizedYield.split(/[-\/]/);
+  return parts.some(part => part.trim() === normalizedAsset);
+}

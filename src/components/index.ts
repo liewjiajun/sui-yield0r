@@ -4,3 +4,6 @@ export { WalletConnect } from './WalletConnect';
 export { YieldCard } from './YieldCard';
 export { YieldFiltersComponent } from './YieldFilters';
 export { ErrorDisplay, WarningBadge, DataSourceStatus } from './ErrorDisplay';
+export { NeoCard, NeoCardHeader, NeoCardContent } from './NeoCard';
+export { NeoButton, NeoTag, NeoInput } from './NeoButton';
+export { ThemeToggle } from './ThemeToggle';

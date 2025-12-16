@@ -21,18 +21,18 @@ export function ErrorDisplay({ errors, className = '' }: ErrorDisplayProps) {
   );
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-3 ${className}`}>
       {criticalErrors.length > 0 && (
-        <div className="border-3 border-terminal-red bg-terminal-red/10 p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-terminal-red font-mono text-xs uppercase tracking-wider">
-              [ERROR]
+        <div className="border-3 border-black bg-neo-red p-4 shadow-neo">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="px-3 py-1 bg-black text-white text-xs font-bold uppercase">
+              Error
             </span>
           </div>
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {criticalErrors.map((error, i) => (
-              <li key={i} className="font-mono text-xs text-terminal-red">
-                <span className="text-terminal-green-dim">{error.protocol}:</span>{' '}
+              <li key={i} className="text-sm text-black">
+                <span className="font-bold">{error.protocol}:</span>{' '}
                 {error.message}
               </li>
             ))}
@@ -41,16 +41,16 @@ export function ErrorDisplay({ errors, className = '' }: ErrorDisplayProps) {
       )}
 
       {warnings.length > 0 && (
-        <div className="border-3 border-terminal-amber bg-terminal-amber/10 p-3">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-terminal-amber font-mono text-xs uppercase tracking-wider">
-              [WARNING]
+        <div className="border-3 border-black bg-neo-yellow p-4 shadow-neo">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="px-3 py-1 bg-black text-white text-xs font-bold uppercase">
+              Warning
             </span>
           </div>
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {warnings.map((warning, i) => (
-              <li key={i} className="font-mono text-xs text-terminal-amber">
-                <span className="text-terminal-green-dim">{warning.protocol}:</span>{' '}
+              <li key={i} className="text-sm text-black">
+                <span className="font-bold">{warning.protocol}:</span>{' '}
                 {warning.message}
               </li>
             ))}
@@ -66,7 +66,7 @@ export function WarningBadge({ count }: { count: number }) {
   if (count === 0) return null;
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-terminal-amber/20 border border-terminal-amber text-terminal-amber font-mono text-xs">
+    <span className="inline-flex items-center gap-1 px-3 py-1 bg-neo-yellow border-2 border-black text-black font-bold text-xs uppercase">
       {count} warning{count !== 1 ? 's' : ''}
     </span>
   );
@@ -82,23 +82,23 @@ export function DataSourceStatus({
 }) {
   if (hasError) {
     return (
-      <span className="text-terminal-red font-mono text-xs" title="Failed to fetch data">
-        [ERR]
+      <span className="px-2 py-1 bg-neo-red border-2 border-black text-black font-bold text-xs uppercase" title="Failed to fetch data">
+        ERR
       </span>
     );
   }
 
   if (isEstimated) {
     return (
-      <span className="text-terminal-amber font-mono text-xs" title="APY is estimated">
-        [EST]
+      <span className="px-2 py-1 bg-neo-orange border-2 border-black text-black font-bold text-xs uppercase" title="APY is estimated">
+        EST
       </span>
     );
   }
 
   return (
-    <span className="text-terminal-green font-mono text-xs" title="Live data">
-      [LIVE]
+    <span className="px-2 py-1 bg-neo-green border-2 border-black text-black font-bold text-xs uppercase" title="Live data">
+      LIVE
     </span>
   );
 }

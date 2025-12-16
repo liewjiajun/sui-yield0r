@@ -9,7 +9,7 @@
 |----------|------------|
 | Framework | React 19.2 + Vite 7.3 |
 | Language | TypeScript 5.9 |
-| Styling | Tailwind CSS 3.4 (Neobrutalist/Retro-Terminal theme) |
+| Styling | Tailwind CSS 3.4 (Pop-Art Neo-Brutalism theme) |
 | State | @tanstack/react-query 5.62 |
 | Blockchain | @mysten/sui 1.45.2, @mysten/dapp-kit 0.19.11 |
 | Router | react-router-dom 7.1 |
@@ -55,6 +55,8 @@ src/
 │   ├── YieldCard.tsx       # Individual yield opportunity card
 │   ├── YieldFilters.tsx    # Filter controls for yields
 │   ├── ErrorDisplay.tsx    # Error/warning display components
+│   ├── NeoCard.tsx         # Neo-brutalist card component
+│   ├── NeoButton.tsx       # Neo-brutalist button/tag/input components
 │   └── index.ts
 ├── hooks/
 │   ├── useYieldData.ts     # Main yield data fetching hook
@@ -76,7 +78,7 @@ src/
 │   └── MyYields.tsx        # Personalized yields view
 ├── App.tsx                 # Main app with routing
 ├── main.tsx                # Entry point
-└── index.css               # Tailwind + custom styles
+└── index.css               # Tailwind + Neo-Brutalist styles
 ```
 
 ## Protocol Integration Status
@@ -100,12 +102,7 @@ src/
 ## Implemented Features
 
 - [x] Project scaffold (Vite + React + TypeScript)
-- [x] Tailwind CSS with Neobrutalist/Retro-Terminal theme
-  - Terminal green (#00ff41) on black (#0a0a0a)
-  - Brutal shadows and hard borders
-  - CRT scanline effects
-  - Custom scrollbar styling
-  - JetBrains Mono font
+- [x] Tailwind CSS with Pop-Art Neo-Brutalism theme
 - [x] Wallet connection via @mysten/dapp-kit
 - [x] Yield Leaderboard (global view)
   - Filterable by protocol, asset type
@@ -123,8 +120,8 @@ src/
 ## Error Handling
 
 The app tracks and displays errors from data fetching:
-- **Critical Errors**: Failed API calls, network issues
-- **Warnings**: Unavailable APY data, estimated values
+- **Critical Errors**: Failed API calls, network issues (red cards)
+- **Warnings**: Unavailable APY data, estimated values (yellow cards)
 
 Users can click the warning badge to see detailed error messages.
 
@@ -136,13 +133,53 @@ Users can click the warning badge to see detailed error messages.
 
 ## Design Philosophy
 
-**"Anti-Dashboard"** - Neobrutalist/Retro-Terminal aesthetic:
-- High contrast terminal green (#00ff41) on black (#0a0a0a)
-- Hard shadows, raw borders (border-3)
-- Monospace fonts (JetBrains Mono)
-- CRT effects (scanlines, subtle flicker)
-- Data-dense, hacker-tool feel
-- No rounded corners, no gradients, no soft shadows
+**Pop-Art Neo-Brutalism** - High energy, bold, and unapologetic:
+
+### Color Palette
+| Color | Hex | Usage |
+|-------|-----|-------|
+| Background | `#FFFDF5` | Cream white base |
+| Foreground | `#000000` | Pure black text |
+| Neo Red | `#FF6B6B` | Primary actions, buttons |
+| Neo Teal | `#4ECDC4` | Secondary highlights |
+| Neo Yellow | `#FFE66D` | Accents, tags, warnings |
+| Neo Green | `#A3E635` | Success states, stablecoins |
+| Neo Blue | `#60A5FA` | Lending type indicator |
+| Neo Purple | `#A78BFA` | LP type indicator |
+| Neo Orange | `#FB923C` | Vault type, warnings |
+| Neo Pink | `#F472B6` | Farm type indicator |
+
+### Visual Characteristics
+- **Light Background**: White/cream (`#FFFDF5`) - NO dark mode
+- **Hard Shadows**: `4px 4px 0px 0px #000000` - NO blur
+- **Thick Borders**: 3px solid black on all containers
+- **Bold Typography**: Uppercase, heavy weight, high contrast
+- **Interactive Feedback**:
+  - Hover: Lift up (`-2px, -2px`) with larger shadow
+  - Active: Press down (`+4px, +4px`) with no shadow
+
+### Component Classes
+```css
+.card-neo       /* White card with black border and shadow */
+.btn-neo        /* Red button with press animation */
+.btn-neo-teal   /* Teal secondary button */
+.btn-neo-outline /* White button, yellow on hover */
+.input-neo      /* Input with focus lift effect */
+.tag-neo        /* Yellow tag/badge */
+.tag-neo-teal   /* Teal tag */
+.tag-neo-red    /* Red tag */
+.tag-neo-green  /* Green tag */
+```
+
+### Asset Type Color Coding
+| Type | Color | Class |
+|------|-------|-------|
+| Lending | Blue | `bg-neo-blue` |
+| LP | Purple | `bg-neo-purple` |
+| LST | Teal | `bg-neo-teal` |
+| Vault | Orange | `bg-neo-orange` |
+| Farm | Pink | `bg-neo-pink` |
+| Staking | Green | `bg-neo-green` |
 
 ## Running the Project
 
@@ -172,4 +209,4 @@ npm run preview
 - **Used For**: Suilend, SpringSui, Haedal TVL
 
 ---
-*Last updated: Dec 15, 2025 - Full real data integration via DefiLlama + on-chain*
+*Last updated: Dec 16, 2025 - Pop-Art Neo-Brutalism UI overhaul*

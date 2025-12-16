@@ -7,22 +7,38 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   return (
-    <div className="min-h-screen bg-terminal-black">
+    <div
+      className="min-h-screen transition-colors duration-200"
+      style={{ backgroundColor: 'var(--background)' }}
+    >
       <Header />
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 py-4 md:py-8">
         {children}
       </main>
-      <footer className="border-t border-terminal-green/20 mt-16 py-6">
+      <footer
+        className="mt-8 md:mt-16 py-4 md:py-6"
+        style={{
+          borderTop: '3px solid var(--border-color)',
+          backgroundColor: 'var(--card-bg)',
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between text-terminal-green-dim font-mono text-xs">
-            <div>
-              sui yield0r v0.1.0 // read-only intelligence
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm font-medium">
+            <div className="flex items-center gap-3">
+              <span className="tag-neo text-xs">v0.1.0</span>
+              <span style={{ color: 'var(--foreground)' }}>Read-only Intelligence</span>
             </div>
             <div className="flex items-center gap-4">
-              <span>CHAIN: MAINNET</span>
-              <span className="flex items-center gap-1">
-                <span className="w-2 h-2 bg-terminal-green rounded-full animate-pulse" />
-                LIVE
+              <span style={{ color: 'var(--foreground)' }}>
+                Vibe coded poorly by{' '}
+                <a
+                  href="https://x.com/jjonlydown"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-bold underline decoration-2 decoration-neo-red hover:bg-neo-red hover:no-underline hover:text-black px-1 transition-all"
+                >
+                  @jjonlydown
+                </a>
               </span>
             </div>
           </div>

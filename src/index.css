@@ -4,8 +4,27 @@
 
 @layer base {
   :root {
-    --terminal-green: #00ff41;
-    --terminal-black: #0a0a0a;
+    --background: #FFFDF5;
+    --foreground: #000000;
+    --card-bg: #FFFFFF;
+    --border-color: #000000;
+    --neo-red: #FF6B6B;
+    --neo-teal: #4ECDC4;
+    --neo-yellow: #FFE66D;
+    --neo-green: #A3E635;
+    --shadow-color: #000000;
+  }
+
+  .dark {
+    --background: #0a0a0a;
+    --foreground: #FFFFFF;
+    --card-bg: #1a1a1a;
+    --border-color: #FFFFFF;
+    --neo-red: #FF6B6B;
+    --neo-teal: #4ECDC4;
+    --neo-yellow: #FFE66D;
+    --neo-green: #A3E635;
+    --shadow-color: #FFFFFF;
   }
 
   * {
@@ -13,155 +32,251 @@
   }
 
   html {
-    font-family: 'JetBrains Mono', monospace;
-    background-color: var(--terminal-black);
-    color: #e0e0e0;
+    font-family: 'Inter', 'Space Grotesk', system-ui, sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
   }
 
   body {
     margin: 0;
     min-height: 100vh;
-    background-color: var(--terminal-black);
-    background-image:
-      linear-gradient(rgba(0, 255, 65, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 255, 65, 0.02) 1px, transparent 1px);
-    background-size: 20px 20px;
-  }
-
-  /* CRT scanline effect overlay */
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0, 0, 0, 0.1),
-      rgba(0, 0, 0, 0.1) 1px,
-      transparent 1px,
-      transparent 2px
-    );
-    z-index: 9999;
+    background-color: var(--background);
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   /* Selection styling */
   ::selection {
-    background: var(--terminal-green);
-    color: var(--terminal-black);
+    background: var(--neo-yellow);
+    color: #000000;
   }
 
-  /* Scrollbar styling */
+  /* Scrollbar styling - Neo-Brutalist */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 12px;
+    height: 12px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #111111;
+    background: var(--background);
+    border-left: 3px solid var(--border-color);
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #00ff41;
-    border: 1px solid #0a0a0a;
+    background: var(--border-color);
+    border: 2px solid var(--background);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #33ff66;
+    background: var(--neo-red);
   }
 }
 
 @layer components {
-  /* Neobrutalist button styles */
-  .btn-brutal {
-    @apply px-4 py-2 font-mono font-bold uppercase tracking-wider;
-    @apply bg-terminal-black text-terminal-green;
-    @apply border-3 border-terminal-green;
-    @apply shadow-brutal transition-all duration-100;
-    @apply hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm;
-    @apply active:translate-x-[4px] active:translate-y-[4px] active:shadow-none;
+  /* Neo-Brutalist Card */
+  .card-neo {
+    background-color: var(--card-bg);
+    border: 3px solid var(--border-color);
+    box-shadow: 4px 4px 0px 0px var(--shadow-color);
+    @apply p-6;
   }
 
-  .btn-brutal-amber {
-    @apply px-4 py-2 font-mono font-bold uppercase tracking-wider;
-    @apply bg-terminal-black text-terminal-amber;
-    @apply border-3 border-terminal-amber;
-    @apply shadow-brutal-amber transition-all duration-100;
-    @apply hover:translate-x-[2px] hover:translate-y-[2px];
-    @apply active:translate-x-[4px] active:translate-y-[4px] active:shadow-none;
+  .card-neo-teal {
+    @apply bg-neo-teal p-6;
+    border: 3px solid var(--border-color);
+    box-shadow: 4px 4px 0px 0px var(--shadow-color);
   }
 
-  /* Card with brutal styling */
-  .card-brutal {
-    @apply bg-terminal-dark border-3 border-terminal-green;
-    @apply shadow-brutal p-4;
+  .card-neo-yellow {
+    @apply bg-neo-yellow p-6;
+    border: 3px solid var(--border-color);
+    box-shadow: 4px 4px 0px 0px var(--shadow-color);
   }
 
-  .card-brutal-amber {
-    @apply bg-terminal-dark border-3 border-terminal-amber;
-    @apply shadow-brutal-amber p-4;
+  .card-neo-red {
+    @apply bg-neo-red p-6;
+    border: 3px solid var(--border-color);
+    box-shadow: 4px 4px 0px 0px var(--shadow-color);
   }
 
-  /* Terminal-style input */
-  .input-terminal {
-    @apply bg-terminal-black text-terminal-green;
-    @apply border-2 border-terminal-green px-3 py-2;
-    @apply font-mono placeholder:text-terminal-green-dim;
-    @apply focus:outline-none focus:shadow-glow;
+  /* Neo-Brutalist Button - Primary */
+  .btn-neo {
+    @apply px-6 py-3 font-bold uppercase tracking-wide;
+    @apply bg-neo-red;
+    color: #000000;
+    border: 3px solid var(--border-color);
+    box-shadow: 4px 4px 0px 0px var(--shadow-color);
+    @apply transition-all duration-75;
+    @apply hover:translate-x-[-2px] hover:translate-y-[-2px];
+    @apply active:translate-x-[4px] active:translate-y-[4px];
+    @apply cursor-pointer;
   }
 
-  /* Blinking cursor effect */
-  .cursor-blink::after {
-    content: "_";
-    @apply animate-blink text-terminal-green;
+  .btn-neo:hover {
+    box-shadow: 8px 8px 0px 0px var(--shadow-color);
   }
 
-  /* Glowing text effect */
-  .text-glow {
-    text-shadow: 0 0 10px var(--terminal-green), 0 0 20px var(--terminal-green);
+  .btn-neo:active {
+    box-shadow: none;
   }
 
-  /* Data table styling */
-  .table-terminal {
-    @apply w-full font-mono text-sm;
+  /* Neo-Brutalist Button - Secondary (Teal) */
+  .btn-neo-teal {
+    @apply px-6 py-3 font-bold uppercase tracking-wide;
+    @apply bg-neo-teal;
+    color: #000000;
+    border: 3px solid var(--border-color);
+    box-shadow: 4px 4px 0px 0px var(--shadow-color);
+    @apply transition-all duration-75;
+    @apply hover:translate-x-[-2px] hover:translate-y-[-2px];
+    @apply active:translate-x-[4px] active:translate-y-[4px];
+    @apply cursor-pointer;
   }
 
-  .table-terminal th {
-    @apply text-left text-terminal-green uppercase tracking-wider py-2 px-3;
-    @apply border-b-2 border-terminal-green;
+  .btn-neo-teal:hover {
+    box-shadow: 8px 8px 0px 0px var(--shadow-color);
   }
 
-  .table-terminal td {
-    @apply py-2 px-3 border-b border-terminal-green/30;
+  .btn-neo-teal:active {
+    box-shadow: none;
   }
 
-  .table-terminal tr:hover td {
-    @apply bg-terminal-green/10;
+  /* Neo-Brutalist Button - Outline */
+  .btn-neo-outline {
+    @apply px-6 py-3 font-bold uppercase tracking-wide;
+    background-color: var(--card-bg);
+    color: var(--foreground);
+    border: 3px solid var(--border-color);
+    box-shadow: 4px 4px 0px 0px var(--shadow-color);
+    @apply transition-all duration-75;
+    @apply hover:translate-x-[-2px] hover:translate-y-[-2px] hover:bg-neo-yellow;
+    @apply active:translate-x-[4px] active:translate-y-[4px];
+    @apply cursor-pointer;
+  }
+
+  .btn-neo-outline:hover {
+    box-shadow: 8px 8px 0px 0px var(--shadow-color);
+    color: #000000;
+  }
+
+  .btn-neo-outline:active {
+    box-shadow: none;
+  }
+
+  /* Neo-Brutalist Input */
+  .input-neo {
+    background-color: var(--card-bg);
+    color: var(--foreground);
+    border: 3px solid var(--border-color);
+    @apply px-4 py-3;
+    @apply font-medium placeholder:text-neutral;
+    @apply focus:outline-none focus:translate-x-[-2px] focus:translate-y-[-2px];
+    @apply transition-all duration-75;
+  }
+
+  .input-neo:focus {
+    box-shadow: 4px 4px 0px 0px var(--shadow-color);
+  }
+
+  /* Neo-Brutalist Tag/Badge */
+  .tag-neo {
+    @apply inline-block px-3 py-1 text-sm font-bold uppercase;
+    @apply bg-neo-yellow;
+    color: #000000;
+    border: 2px solid var(--border-color);
+  }
+
+  .tag-neo-teal {
+    @apply inline-block px-3 py-1 text-sm font-bold uppercase;
+    @apply bg-neo-teal;
+    color: #000000;
+    border: 2px solid var(--border-color);
+  }
+
+  .tag-neo-red {
+    @apply inline-block px-3 py-1 text-sm font-bold uppercase;
+    @apply bg-neo-red;
+    color: #000000;
+    border: 2px solid var(--border-color);
+  }
+
+  .tag-neo-green {
+    @apply inline-block px-3 py-1 text-sm font-bold uppercase;
+    @apply bg-neo-green;
+    color: #000000;
+    border: 2px solid var(--border-color);
+  }
+
+  /* Neo-Brutalist Table */
+  .table-neo {
+    @apply w-full font-medium text-sm;
+    border: 3px solid var(--border-color);
+  }
+
+  .table-neo th {
+    @apply text-left uppercase tracking-wider py-3 px-4;
+    @apply bg-neo-yellow font-bold;
+    color: #000000;
+    border-bottom: 3px solid var(--border-color);
+  }
+
+  .table-neo td {
+    @apply py-3 px-4;
+    background-color: var(--card-bg);
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .table-neo tr:hover td {
+    @apply bg-neo-teal/20;
+  }
+
+  /* Neo-Brutalist Link */
+  .link-neo {
+    color: var(--foreground);
+    @apply font-bold underline decoration-3 decoration-neo-red;
+    @apply hover:bg-neo-red hover:no-underline hover:px-1;
+    @apply transition-all duration-75;
+  }
+
+  .link-neo:hover {
+    color: #000000;
   }
 }
 
 @layer utilities {
-  /* Flicker animation for authenticity */
-  .animate-flicker {
-    animation: flicker 0.15s infinite;
+  /* Utility for hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-75;
+    @apply hover:translate-x-[-2px] hover:translate-y-[-2px];
+    @apply active:translate-x-[4px] active:translate-y-[4px];
   }
 
-  @keyframes flicker {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.98; }
+  .hover-lift:hover {
+    box-shadow: 8px 8px 0px 0px var(--shadow-color);
   }
 
-  /* Typing animation */
-  .typing-effect {
-    overflow: hidden;
-    white-space: nowrap;
-    animation: typing 2s steps(40, end);
+  .hover-lift:active {
+    box-shadow: none;
   }
 
-  @keyframes typing {
-    from { width: 0; }
-    to { width: 100%; }
+  /* Dark mode text colors */
+  .text-theme-primary {
+    color: var(--foreground);
+  }
+
+  .text-theme-secondary {
+    color: var(--foreground);
+    opacity: 0.7;
+  }
+
+  .bg-theme-primary {
+    background-color: var(--background);
+  }
+
+  .bg-theme-card {
+    background-color: var(--card-bg);
+  }
+
+  .border-theme {
+    border-color: var(--border-color);
   }
 }

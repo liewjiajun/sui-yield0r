@@ -86,12 +86,22 @@ export function useHoldingsWithYields(yields: import('../types/yield').YieldOppo
   const { holdings, ...rest } = useUserHoldings();
 
   const holdingsWithYields = holdings.filter((holding) => {
-    // Check if there's a yield opportunity for this asset
-    return yields.some(
-      (y) =>
-        y.assetSymbol.toUpperCase() === holding.symbol.toUpperCase() ||
-        y.asset === holding.coinType
-    );
+    // Check if there's a yield opportunity for this asset (including LP tokens)
+    return yields.some((y) => {
+      // Direct symbol match
+      if (y.assetSymbol.toUpperCase() === holding.symbol.toUpperCase()) {
+        return true;
+      }
+      // Coin type match
+      if (y.asset === holding.coinType) {
+        return true;
+      }
+      // LP token contains this asset
+      const normalizedYield = y.assetSymbol.toUpperCase();
+      const normalizedAsset = holding.symbol.toUpperCase();
+      const parts = normalizedYield.split(/[-\/]/);
+      return parts.some(part => part.trim() === normalizedAsset);
+    });
   });
 
   return {

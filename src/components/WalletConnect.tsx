@@ -13,17 +13,17 @@ export function WalletConnect() {
   if (currentAccount) {
     return (
       <div className="flex items-center gap-3">
-        <div className="card-brutal px-3 py-2 flex items-center gap-2">
-          <div className="w-2 h-2 bg-terminal-green rounded-full animate-pulse" />
-          <span className="text-terminal-green font-mono text-sm">
+        <div className="px-4 py-2 border-3 border-black bg-neo-green shadow-neo-sm flex items-center gap-2">
+          <div className="w-2 h-2 bg-black rounded-full animate-pulse" />
+          <span className="text-black font-bold text-sm">
             {formatAddress(currentAccount.address)}
           </span>
         </div>
         <button
           onClick={() => disconnect()}
-          className="btn-brutal text-xs"
+          className="btn-neo-outline text-xs px-4 py-2"
         >
-          DISCONNECT
+          Disconnect
         </button>
       </div>
     );
@@ -34,11 +34,8 @@ export function WalletConnect() {
       open={isModalOpen}
       onOpenChange={setIsModalOpen}
       trigger={
-        <button className="btn-brutal">
-          <span className="flex items-center gap-2">
-            <span className="text-terminal-amber">&gt;</span>
-            CONNECT_WALLET
-          </span>
+        <button className="btn-neo">
+          Connect Wallet
         </button>
       }
     />
