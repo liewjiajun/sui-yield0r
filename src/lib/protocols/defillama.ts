@@ -6,47 +6,10 @@
 import type { YieldOpportunity, Protocol, FetchError, AssetType } from '../../types/yield';
 import { DEFILLAMA_PROJECT_MAP, PROTOCOL_CONFIGS } from '../../types/yield';
 import { formatTvl } from '../constants';
+import { generateDeepLink } from '../../integrations/deepLinks';
+import { formatTokenSymbol } from '../../integrations/tokenUtils';
 
 const DEFILLAMA_YIELDS_API = 'https://yields.llama.fi/pools';
-
-/**
- * Build direct URL to protocol pool/market
- * These URLs take users directly to where they can deposit/provide liquidity
- * URLs verified as of Dec 2024
- */
-function buildProtocolUrl(protocol: Protocol): string {
-  const urlMap: Record<Protocol, string> = {
-    // Lending Protocols - verified working URLs
-    navi: 'https://app.naviprotocol.io/',
-    scallop: 'https://app.scallop.io/',
-    suilend: 'https://suilend.fi/dashboard',
-
-    // DEXes / CLMMs - verified working URLs
-    cetus: 'https://app.cetus.zone/pool/list',
-    turbos: 'https://app.turbos.finance/#/pools',
-    bluefin: 'https://trade.bluefin.io/swap',
-    flowx: 'https://flowx.finance/swap',
-    kriya: 'https://kriya.finance/pools',
-    momentum: 'https://www.mmt.finance/',
-    fullsail: 'https://fullsail.finance/',
-
-    // Yield / Vault protocols
-    kai: 'https://kai.finance/',
-    bucket: 'https://app.bucketprotocol.io/',
-
-    // Liquid Staking
-    aftermath: 'https://aftermath.finance/',
-    haedal: 'https://haedal.xyz/',
-    springsui: 'https://www.springsui.com/',
-    volo: 'https://www.volo.fi/',
-
-    // Other
-    deepbook: 'https://deepbook.tech/',
-    other: '',
-  };
-
-  return urlMap[protocol] || PROTOCOL_CONFIGS[protocol]?.website || '';
-}
 
 // DefiLlama pool structure
 interface DefiLlamaPool {
@@ -166,15 +129,23 @@ export async function fetchDefiLlamaYields(): Promise<{
       .map((pool): YieldOpportunity => {
         const protocol = mapProject(pool.project);
         const assetType = determineAssetType(pool, pool.project);
-        // Build direct URL - prefer our constructed URL over DefiLlama's (often empty)
-        const directUrl = buildProtocolUrl(protocol);
+        const cleanSymbol = formatTokenSymbol(pool.symbol);
+
+        // Generate deep link using the new integration system
+        const deepLink = generateDeepLink({
+          protocol,
+          symbol: cleanSymbol,
+          assetType,
+          poolId: pool.pool,
+          underlyingTokens: pool.underlyingTokens || undefined,
+        });
 
         return {
           id: `defillama-${pool.pool}`,
           protocol,
           protocolName: getProtocolName(protocol),
           asset: pool.underlyingTokens?.[0] || pool.symbol,
-          assetSymbol: pool.symbol,
+          assetSymbol: cleanSymbol,
           type: assetType,
           apy: pool.apy || 0,
           apyBase: pool.apyBase || undefined,
@@ -188,7 +159,7 @@ export async function fetchDefiLlamaYields(): Promise<{
           isStablecoin: pool.stablecoin,
           ilRisk: pool.ilRisk === 'yes' ? 'yes' : 'no',
           lastUpdated: new Date(),
-          url: directUrl || pool.url || '',
+          url: deepLink || pool.url || '',
         };
       });
 

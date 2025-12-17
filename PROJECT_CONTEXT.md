@@ -9,23 +9,31 @@
 |----------|------------|
 | Framework | React 19.2 + Vite 7.3 |
 | Language | TypeScript 5.9 |
-| Styling | Tailwind CSS 3.4 (Pop-Art Neo-Brutalism theme) |
+| Styling | Tailwind CSS 3.4 (Pop-Art Neo-Brutalism theme, dark/light mode) |
 | State | @tanstack/react-query 5.62 |
 | Blockchain | @mysten/sui 1.45.2, @mysten/dapp-kit 0.19.11 |
 | Router | react-router-dom 7.1 |
+| Analytics | @vercel/analytics |
 
 ## Data Sources
 
-### Primary: DefiLlama Yields API
+### Hybrid Approach: Native SDKs + DefiLlama Fallback
+
+**Phase 1: Native SDK Fetchers (Priority)**
+- Direct SDK integration for accurate pool data and deep links
+- Protocols with native integration: Suilend, NAVI, Scallop, Cetus, Turbos, Aftermath, Haedal, SpringSui, Volo
+
+**Phase 2: DefiLlama Yields API (Fallback)**
 - **Endpoint**: `https://yields.llama.fi/pools`
 - **Coverage**: ~305 Sui pools
-- **Protocols**: NAVI, Scallop, Cetus CLMM, Turbos, Bluefin, FlowX, Kai Finance
 - **Update Frequency**: Hourly
-- **Data**: APY (base + rewards), TVL, stablecoin flags, IL risk
+- **Data**: APY (base + rewards), TVL, stablecoin flags, IL risk, reward tokens
 
-### Secondary: On-Chain + DefiLlama TVL
-- **Suilend**: TVL from DefiLlama, APY unavailable (no public API)
-- **Liquid Staking**: SpringSui, Haedal, Aftermath, Volo (~2.5% estimated APY)
+### Notes
+- Native SDKs are tried first for more accurate deep links
+- DefiLlama supplements data for protocols without native integration
+- Deep links are generated dynamically using `src/integrations/deepLinks.ts`
+- Token symbols are sanitized using `src/integrations/tokenUtils.ts`
 
 ## Installed Packages
 
@@ -37,6 +45,15 @@
 - `@tanstack/react-query` - Data fetching & caching
 - `bignumber.js` - Precise decimal math
 - `react-router-dom` - Client-side routing
+
+### Protocol SDKs
+- `@suilend/sdk` - Suilend lending protocol
+- `@naviprotocol/lending` - NAVI Protocol lending
+- `@scallop-io/sui-scallop-sdk` - Scallop lending
+- `@cetusprotocol/cetus-sui-clmm-sdk` - Cetus CLMM pools
+- `turbos-clmm-sdk` - Turbos Finance pools
+- `aftermath-ts-sdk` - Aftermath liquid staking
+- `@flowx-finance/sdk` - FlowX DEX
 
 ### DevDependencies
 - `tailwindcss`, `postcss`, `autoprefixer` - CSS tooling
@@ -62,13 +79,23 @@ src/
 │   ├── useYieldData.ts     # Main yield data fetching hook
 │   ├── useUserHoldings.ts  # User wallet holdings hook
 │   └── index.ts
+├── integrations/           # Native protocol SDK integrations
+│   ├── index.ts            # Aggregator (Native + DefiLlama hybrid)
+│   ├── types.ts            # Integration types
+│   ├── deepLinks.ts        # Protocol deep link generator
+│   ├── tokenUtils.ts       # Token symbol sanitization
+│   ├── suilend.ts          # Suilend SDK integration
+│   ├── navi.ts             # NAVI Protocol integration
+│   ├── scallop.ts          # Scallop integration
+│   ├── cetus.ts            # Cetus CLMM integration
+│   ├── turbos.ts           # Turbos integration
+│   ├── aftermath.ts        # Aftermath liquid staking
+│   └── liquidStaking.ts    # Haedal, SpringSui, Volo
 ├── lib/
 │   ├── constants.ts        # Coin types, protocol addresses
 │   └── protocols/
-│       ├── index.ts        # Protocol fetcher aggregator
-│       ├── defillama.ts    # DefiLlama API integration
-│       ├── suilend.ts      # Suilend on-chain + TVL
-│       └── liquidStaking.ts # LST protocols (sSUI, haSUI, etc.)
+│       ├── index.ts        # Protocol fetcher (uses integrations)
+│       └── defillama.ts    # DefiLlama API integration
 ├── providers/
 │   └── SuiProvider.tsx     # Sui/Wallet provider setup
 ├── types/
@@ -83,29 +110,34 @@ src/
 
 ## Protocol Integration Status
 
-| Protocol | Source | Status | Notes |
-|----------|--------|--------|-------|
-| NAVI Protocol | DefiLlama | ✅ Live | 30 pools, lending |
-| Scallop | DefiLlama | ✅ Live | 21 pools, lending |
-| Cetus CLMM | DefiLlama | ✅ Live | 116 pools, LP |
-| Turbos | DefiLlama | ✅ Live | 43 pools, LP |
-| Bluefin | DefiLlama | ✅ Live | 58 pools, LP |
-| FlowX | DefiLlama | ✅ Live | 18 pools, LP |
-| Kai Finance | DefiLlama | ✅ Live | 6 pools, vault |
-| Bucket Farm | DefiLlama | ✅ Live | Farm yields |
-| Suilend | On-chain + TVL | ⚠️ Partial | TVL only, no APY API |
-| SpringSui | TVL + Estimate | ⚠️ Partial | ~2.5% estimated |
-| Haedal | TVL + Estimate | ⚠️ Partial | ~2.5% estimated |
-| Aftermath | TVL + Estimate | ⚠️ Partial | ~2.5% estimated |
-| Volo | TVL + Estimate | ⚠️ Partial | ~2.5% estimated |
+| Protocol | Source | Status | Deep Links |
+|----------|--------|--------|------------|
+| Suilend | Native SDK | ✅ Live | `suilend.fi/dashboard?asset=X` |
+| NAVI Protocol | Native + DefiLlama | ✅ Live | `app.naviprotocol.io/` |
+| Scallop | Native + DefiLlama | ✅ Live | `app.scallop.io/` |
+| Cetus | Native SDK | ✅ Live | `app.cetus.zone/liquidity/deposit?poolAddress=X` |
+| Turbos | Native SDK | ✅ Live | `app.turbos.finance/fun/{poolId}` |
+| Aftermath | Native SDK | ✅ Live | `aftermath.finance/stake` |
+| Haedal | Native | ✅ Live | `haedal.xyz/stake` |
+| SpringSui | Native | ✅ Live | `springsui.com/` |
+| Volo | Native | ✅ Live | `stake.volo.fi/` |
+| Bluefin | DefiLlama | ✅ Live | `trade.bluefin.io/swap` |
+| FlowX | DefiLlama | ✅ Live | `flowx.finance/liquidity` |
+| Kriya | DefiLlama | ✅ Live | `app.kriya.finance/earn` |
+| Momentum | DefiLlama | ✅ Live | `app.mmt.finance/liquidity` |
+| Full Sail | DefiLlama | ✅ Live | `fullsail.finance/liquidity` |
+| Kai Finance | DefiLlama | ✅ Live | `kai.finance/vaults` |
+| Bucket | DefiLlama | ✅ Live | `app.bucketprotocol.io/tank` |
+| DeepBook | DefiLlama | ✅ Live | `deepbook.tech` |
 
 ## Implemented Features
 
 - [x] Project scaffold (Vite + React + TypeScript)
 - [x] Tailwind CSS with Pop-Art Neo-Brutalism theme
+- [x] Dark/Light mode toggle (CSS variables-based theming)
 - [x] Wallet connection via @mysten/dapp-kit
 - [x] Yield Leaderboard (global view)
-  - Filterable by protocol, asset type
+  - Filterable by protocol (18 protocols), asset type
   - Sortable by APY
   - Search functionality
   - Stablecoins filter
@@ -116,6 +148,12 @@ src/
 - [x] Real-time data from DefiLlama Yields API
 - [x] Error/warning display for failed fetches
 - [x] Protocol-specific APY breakdowns (base + rewards)
+- [x] Protocol logos (inline SVG) on yield cards
+- [x] Reward token display ("Earn" section showing BLUE, SCA, CETUS, etc.)
+- [x] Direct protocol URLs (Open button links directly to protocol pages)
+- [x] Consistent card heights (flexbox layout with min-heights)
+- [x] Vercel Analytics integration
+- [x] Responsive design (mobile-friendly)
 
 ## Error Handling
 
@@ -127,9 +165,9 @@ Users can click the warning badge to see detailed error messages.
 
 ## Known Limitations
 
-1. **Suilend**: No public API for APY data. TVL available via DefiLlama.
-2. **Liquid Staking**: APY is estimated (~2.5%) based on average Sui staking rates.
-3. **DefiLlama**: Data updated hourly, may not reflect real-time changes.
+1. **DefiLlama Dependency**: All data sourced from DefiLlama Yields API, updated hourly.
+2. **Protocol URLs**: Open buttons link to protocol main pages, not specific pools (most protocols use client-side routing).
+3. **Reward Tokens**: Some reward token addresses may not resolve to symbols (shown as truncated addresses).
 
 ## Design Philosophy
 
@@ -150,13 +188,29 @@ Users can click the warning badge to see detailed error messages.
 | Neo Pink | `#F472B6` | Farm type indicator |
 
 ### Visual Characteristics
-- **Light Background**: White/cream (`#FFFDF5`) - NO dark mode
-- **Hard Shadows**: `4px 4px 0px 0px #000000` - NO blur
-- **Thick Borders**: 3px solid black on all containers
+- **Dual Theme**: Light mode (cream `#FFFDF5`) and Dark mode (dark `#1a1a1a`)
+- **Hard Shadows**: `4px 4px 0px 0px var(--shadow-color)` - NO blur
+- **Thick Borders**: 3px solid `var(--border-color)` on all containers
 - **Bold Typography**: Uppercase, heavy weight, high contrast
 - **Interactive Feedback**:
   - Hover: Lift up (`-2px, -2px`) with larger shadow
   - Active: Press down (`+4px, +4px`) with no shadow
+
+### CSS Variables (Theme Support)
+```css
+:root {
+  --background: #FFFDF5;
+  --foreground: #000000;
+  --border-color: #000000;
+  --shadow-color: #000000;
+}
+.dark {
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --border-color: #ffffff;
+  --shadow-color: #ffffff;
+}
+```
 
 ### Component Classes
 ```css
@@ -209,4 +263,4 @@ npm run preview
 - **Used For**: Suilend, SpringSui, Haedal TVL
 
 ---
-*Last updated: Dec 16, 2025 - Pop-Art Neo-Brutalism UI overhaul*
+*Last updated: Dec 17, 2025 - Native SDK integrations, hybrid fetching, dynamic deep links, token sanitization*
